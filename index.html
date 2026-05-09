@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocolo de Secagem Acelerada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep:   #1a4731;
+    --green-mid:    #2d7a52;
+    --green-light:  #4caf7d;
+    --green-pale:   #e8f5ee;
+    --green-wash:   #f2faf6;
+    --white:        #ffffff;
+    --off-white:    #fafafa;
+    --text-dark:    #111a14;
+    --text-body:    #3a4a40;
+    --text-muted:   #7a9285;
+    --border:       #dceee5;
+    --gold:         #c9a84c;
+    --radius-sm:    8px;
+    --radius-md:    14px;
+    --radius-lg:    22px;
+    --shadow-card:  0 2px 24px rgba(26,71,49,.08);
+    --shadow-btn:   0 6px 28px rgba(45,122,82,.38);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── TOPBAR ─────────────────────────────── */
+  .topbar {
+    background: var(--green-deep);
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,.88);
+    letter-spacing: .3px;
+  }
+  .topbar span { color: #7ee8a8; font-weight: 600; }
+
+  /* ── HERO ───────────────────────────────── */
+  .hero {
+    background: linear-gradient(160deg, var(--green-wash) 0%, var(--white) 60%);
+    padding: 52px 20px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(76,175,125,.13) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-pale);
+    border: 1px solid var(--border);
+    color: var(--green-mid);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 22px;
+  }
+  .badge::before { content: '✦'; font-size: 10px; }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 38px);
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--text-dark);
+    max-width: 520px;
+    margin: 0 auto 16px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--green-mid);
+  }
+
+  .hero p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-body);
+    max-width: 400px;
+    margin: 0 auto 32px;
+    font-weight: 300;
+  }
+
+  /* ── MOCKUP ─────────────────────────────── */
+  .mockup-wrap {
+    margin: 0 auto 36px;
+    width: min(260px, 72vw);
+    position: relative;
+  }
+  .mockup-shadow {
+    position: absolute;
+    bottom: -18px; left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 28px;
+    background: radial-gradient(ellipse, rgba(26,71,49,.22) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ebook-cover {
+    width: 100%;
+    border-radius: var(--radius-md);
+    box-shadow: 0 20px 60px rgba(26,71,49,.22), 0 4px 12px rgba(26,71,49,.12);
+    display: block;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(145deg, var(--green-deep) 0%, #0f2d1e 100%);
+    aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .ebook-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px;
+    text-align: center;
+    position: relative;
+  }
+  .ebook-inner::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+  .ebook-inner::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: radial-gradient(ellipse at 60% 30%, rgba(76,175,125,.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .ebook-tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+  .ebook-leaf {
+    font-size: 38px;
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+  .ebook-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    position: relative; z-index: 1;
+  }
+  .ebook-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,.55);
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    position: relative; z-index: 1;
+  }
+  .ebook-line {
+    width: 32px;
+    height: 2px;
+    background: var(--green-light);
+    border-radius: 2px;
+    margin: 12px auto;
+    position: relative; z-index: 1;
+  }
+
+  /* ── PRICE ──────────────────────────────── */
+  .price-block {
+    margin-bottom: 28px;
+  }
+  .price-old {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: line-through;
+    margin-bottom: 4px;
+  }
+  .price-new {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--green-deep);
+    line-height: 1;
+  }
+  .price-new sup { font-size: 20px; vertical-align: super; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+  .price-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── BUTTONS ────────────────────────────── */
+  .btn-main {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 17px 24px;
+    background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-deep) 100%);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .6px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-btn);
+    transition: transform .18s ease, box-shadow .18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-main::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .btn-main:active { transform: scale(.98); box-shadow: 0 3px 14px rgba(45,122,82,.3); }
+  .btn-arrow { margin-left: 8px; }
+
+  .btn-sub {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .btn-sub svg { vertical-align: middle; margin-right: 4px; }
+
+  /* ── SECTION BASE ───────────────────────── */
+  section { padding: 52px 20px; }
+  .section-inner { max-width: 520px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5.5vw, 30px);
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.28;
+    margin-bottom: 24px;
+  }
+  .divider {
+    width: 36px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green-mid), var(--green-light));
+    border-radius: 3px;
+    margin-bottom: 28px;
+  }
+
+  /* ── PAIN SECTION ───────────────────────── */
+  .pain-section { background: var(--off-white); }
+
+  .pain-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+  }
+  .pain-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--green-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+  .pain-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-body);
+    font-weight: 400;
+    padding-top: 6px;
+  }
+
+  /* ── SOLUTION ───────────────────────────── */
+  .solution-section { background: var(--white); }
+
+  .benefit-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-left: 3px solid var(--green-light);
+    background: var(--green-wash);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .benefit-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--green-mid);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .benefit-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+
+  /* ── WHAT YOU GET ───────────────────────── */
+  .includes-section {
+    background: linear-gradient(160deg, var(--green-deep) 0%, #0f2d1e 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .includes-section::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(76,175,125,.14) 0%, transparent 70%);
+  }
+  .includes-section .section-label { color: var(--green-light); }
+  .includes-section .section-title { color: #fff; }
+  .includes-section .divider { background: linear-gradient(90deg, var(--green-light), transparent); }
+
+  .includes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .include-card {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  .include-icon { font-size: 28px; margin-bottom: 10px; }
+  .include-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .include-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,.5);
+    line-height: 1.4;
+  }
+
+  /* ── GUARANTEE ──────────────────────────── */
+  .guarantee-section { background: var(--off-white); }
+
+  .guarantee-card {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .guarantee-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--green-mid), var(--green-light));
+  }
+  .guarantee-badge {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-deep));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 30px;
+    box-shadow: 0 8px 24px rgba(45,122,82,.3);
+  }
+  .guarantee-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+  }
+  .guarantee-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-body);
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .guarantee-days {
+    display: inline-block;
+    background: var(--green-pale);
+    color: var(--green-mid);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-top: 16px;
+  }
+
+  /* ── FINAL CTA ──────────────────────────── */
+  .cta-section {
+    background: var(--white);
+    padding: 52px 20px 64px;
+    text-align: center;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 6vw, 32px);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .cta-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .cta-price-wrap {
+    margin-bottom: 28px;
+  }
+  .cta-from { font-size: 13px; color: var(--text-muted); text-decoration: line-through; }
+  .cta-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--green-deep);
+    line-height: 1.1;
+  }
+  .cta-price sup { font-size: 22px; font-family: 'DM Sans'; font-weight: 600; vertical-align: super; }
+  .cta-once { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .security-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .security-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .security-item svg { color: var(--green-mid); }
+
+  /* ── FOOTER ─────────────────────────────── */
+  footer {
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  /* ── FADE IN ─────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .55s ease both; }
+  .delay-1 { animation-delay: .1s; }
+  .delay-2 { animation-delay: .22s; }
+  .delay-3 { animation-delay: .34s; }
+  .delay-4 { animation-delay: .46s; }
+
+  /* ── SCROLL REVEAL ───────────────────────── */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  Acesso <span>imediato</span> após o pagamento &nbsp;·&nbsp; 100% digital
+</div>
+
+<!-- ── HERO ─────────────────────────────────── -->
+<section class="hero">
+  <div class="section-inner">
+
+    <div class="badge fade-up">Ebook Digital</div>
+
+    <!-- MOCKUP -->
+    <div class="mockup-wrap fade-up delay-1">
+      <div class="ebook-cover">
+        <div class="ebook-inner">
+          <div class="ebook-tag">Método Prático</div>
+          <div class="ebook-leaf">🌿</div>
+          <div class="ebook-title">Protocolo de Secagem Acelerada</div>
+          <div class="ebook-line"></div>
+          <div class="ebook-sub">Guia de Emagrecimento</div>
+        </div>
+      </div>
+      <div class="mockup-shadow"></div>
+    </div>
+
+    <h1 class="fade-up delay-2">
+      Método simples para <em>acelerar seu emagrecimento</em> sem dietas extremas
+    </h1>
+
+    <p class="fade-up delay-3">
+      Descubra estratégias práticas para reduzir exageros alimentares, melhorar sua rotina e acelerar sua transformação corporal.
+    </p>
+
+    <div class="price-block fade-up delay-4">
+      <div class="price-old">De R$97,00</div>
+      <div class="price-new"><sup>R$</sup>11<sup>,90</sup></div>
+      <div class="price-label">pagamento único · acesso imediato</div>
+    </div>
+
+    <a href="https://pay.kiwify.com.br/uxALnT5" class="btn-main fade-up delay-4">
+      QUERO COMEÇAR AGORA <span class="btn-arrow">→</span>
+    </a>
+    <div class="btn-sub fade-up delay-4">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Compra segura · Kiwify
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PAIN ──────────────────────────────────── -->
+<section class="pain-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Você se identifica?</div>
+    <h2 class="section-title reveal">Você sente que:</h2>
+    <div class="divider reveal"></div>
+
+    <ul class="pain-list">
+      <li class="pain-item reveal">
+        <div class="pain-icon">😤</div>
+        <div class="pain-text">Começa dietas com disposição e abandona em poucos dias</div>
+      </li>
+      <li class="pain-item reveal">
+        <div class="pain-icon">🍫</div>
+        <div class="pain-text">Exagera na alimentação e sente culpa em seguida</div>
+      </li>
+      <li class="pain-item reveal">
+        <div class="pain-icon">📅</div>
+        <div class="pain-text">Não consegue manter uma rotina alimentar por mais de uma semana</div>
+      </li>
+      <li class="pain-item reveal">
+        <div class="pain-icon">🔋</div>
+        <div class="pain-text">Perde a motivação rapidamente e volta aos antigos hábitos</div>
+      </li>
+      <li class="pain-item reveal">
+        <div class="pain-icon">⚖️</div>
+        <div class="pain-text">Tenta emagrecer mas nunca mantém a constância necessária</div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── SOLUTION ──────────────────────────────── -->
+<section class="solution-section">
+  <div class="section-inner">
+    <div class="section-label reveal">A solução</div>
+    <h2 class="section-title reveal">O Protocolo de Secagem Acelerada foi criado para <em style="color:var(--green-mid);font-style:normal">simplificar sua rotina</em></h2>
+    <div class="divider reveal"></div>
+
+    <div class="benefit-grid">
+      <div class="benefit-item reveal">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Estratégias simples e diretas</div>
+      </div>
+      <div class="benefit-item reveal">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Organização alimentar acessível</div>
+      </div>
+      <div class="benefit-item reveal">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Rotina prática para o dia a dia</div>
+      </div>
+      <div class="benefit-item reveal">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Aplicação fácil, sem complicação</div>
+      </div>
+      <div class="benefit-item reveal">
+        <div class="benefit-check">✓</div>
+        <div class="benefit-text">Método direto ao que importa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INCLUDES ───────────────────────────────── -->
+<section class="includes-section">
+  <div class="section-inner">
+    <div class="section-label reveal">O que você recebe</div>
+    <h2 class="section-title reveal">Tudo que você precisa para começar hoje</h2>
+    <div class="divider reveal"></div>
+
+    <div class="includes-grid">
+      <div class="include-card reveal">
+        <div class="include-icon">📖</div>
+        <div class="include-title">Ebook Principal</div>
+        <div class="include-desc">Conteúdo completo e estruturado</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">⚡</div>
+        <div class="include-title">Acesso Imediato</div>
+        <div class="include-desc">Liberado após o pagamento</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">📱</div>
+        <div class="include-title">100% Digital</div>
+        <div class="include-desc">Leia em qualquer dispositivo</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">🗺️</div>
+        <div class="include-title">Guia Prático</div>
+        <div class="include-desc">Passo a passo aplicável</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GUARANTEE ─────────────────────────────── -->
+<section class="guarantee-section">
+  <div class="section-inner">
+    <div class="guarantee-card reveal">
+      <div class="guarantee-badge">🛡️</div>
+      <div class="guarantee-title">Garantia de 7 Dias</div>
+      <p class="guarantee-text">
+        Você pode acessar, testar e explorar todo o conteúdo sem nenhum risco. Se não estiver satisfeito, basta solicitar o reembolso.
+      </p>
+      <div class="guarantee-days">Sem perguntas · Sem burocracia</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ──────────────────────────────── -->
+<section class="cta-section">
+  <div class="section-inner">
+    <h2 class="cta-title reveal">Pronto para dar o primeiro passo?</h2>
+    <p class="cta-sub reveal">Acesse agora e comece sua transformação ainda hoje.</p>
+
+    <div class="cta-price-wrap reveal">
+      <div class="cta-from">De R$97,00</div>
+      <div class="cta-price"><sup>R$</sup>11<sup>,90</sup></div>
+      <div class="cta-once">pagamento único</div>
+    </div>
+
+    <a href="https://pay.kiwify.com.br/uxALnT5" class="btn-main reveal">
+      QUERO COMEÇAR MINHA TRANSFORMAÇÃO <span class="btn-arrow">→</span>
+    </a>
+
+    <div class="security-row reveal">
+      <div class="security-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Compra segura
+      </div>
+      <div class="security-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Acesso imediato
+      </div>
+      <div class="security-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Garantia 7 dias
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<footer>
+  <p>© 2025 Protocolo de Secagem Acelerada · Todos os direitos reservados</p>
+  <p style="margin-top:6px">Este produto é distribuído digitalmente. Os resultados podem variar de pessoa para pessoa.</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
